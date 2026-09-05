@@ -1,0 +1,2912 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+  <meta name="theme-color" content="#2E8B57">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="ClearWords">
+  <title>ClearWords - Learn Nigerian Languages</title>
+  
+  <style>
+    /* ========== CSS VARIABLES ========== */
+    :root {
+      --primary: #2E8B57;
+      --primary-dark: #256E45;
+      --primary-light: #4CAF50;
+      --accent: #4169E1;
+      --accent2: #FF7F50;
+      --accent3: #FFD700;
+      --bg: #121212;
+      --card-bg: #1E1E1E;
+      --card-bg-dark: #252525;
+      --text: #FFFFFF;
+      --text-secondary: #B0B0B0;
+      --border: #2A2A2A;
+      --border-light: #333333;
+      --shadow: rgba(0, 0, 0, 0.3);
+      --success: #4CAF50;
+      --danger: #F44336;
+      --warning: #FF9800;
+      --info: #2196F3;
+    }
+    
+    .light-theme {
+      --bg: #F5F5F5;
+      --card-bg: #FFFFFF;
+      --card-bg-dark: #F0F0F0;
+      --text: #1A1A1A;
+      --text-secondary: #666666;
+      --border: #E0E0E0;
+      --border-light: #D0D0D0;
+      --shadow: rgba(0, 0, 0, 0.1);
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      height: 100vh;
+      overflow: hidden;
+      position: fixed;
+      width: 100%;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+    
+    /* ========== ONBOARDING ========== */
+    #onboarding {
+      display: block;
+      height: 100vh;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      background: var(--bg);
+    }
+    
+    .onboarding-step {
+      display: none;
+      padding: 30px 20px;
+      min-height: 100vh;
+      flex-direction: column;
+      justify-content: center;
+    }
+    
+    .onboarding-step.active {
+      display: flex;
+      animation: fadeIn 0.3s ease;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .step-title {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 10px;
+      text-align: center;
+    }
+    
+    .step-description {
+      font-size: 16px;
+      color: var(--text-secondary);
+      margin-bottom: 30px;
+      text-align: center;
+      line-height: 1.6;
+    }
+    
+    .step-emoji {
+      font-size: 64px;
+      text-align: center;
+      margin: 30px 0;
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+    
+    .onboarding-nav {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      margin-top: 30px;
+    }
+    
+    .onboarding-nav .btn {
+      flex: 1;
+      max-width: 200px;
+    }
+    
+    .onboarding-progress {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 40px;
+    }
+    
+    .onboarding-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--border);
+      transition: all 0.3s;
+    }
+    
+    .onboarding-dot.active {
+      background: var(--primary);
+      transform: scale(1.3);
+    }
+    
+    .onboarding-dot.completed {
+      background: var(--success);
+    }
+    
+    /* ========== LOGIN PAGE ========== */
+    #login-page {
+      display: none;
+      height: 100vh;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      background: var(--bg);
+    }
+    
+    .login-container {
+      max-width: 400px;
+      margin: 0 auto;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-height: 100vh;
+    }
+    
+    .login-logo {
+      text-align: center;
+      font-size: 64px;
+      margin-bottom: 20px;
+      animation: pulse 2s infinite;
+    }
+    
+    .login-title {
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--text);
+      text-align: center;
+      margin-bottom: 10px;
+    }
+    
+    .login-subtitle {
+      font-size: 14px;
+      color: var(--text-secondary);
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    
+    .login-form {
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 24px;
+      border: 1px solid var(--border);
+    }
+    
+    .login-form .input-group {
+      margin-bottom: 20px;
+    }
+    
+    .login-form .input-label {
+      display: block;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+    
+    .login-form .input {
+      width: 100%;
+      padding: 16px;
+      background: var(--bg);
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      font-size: 16px;
+      color: var(--text);
+      transition: all 0.2s;
+    }
+    
+    .login-form .input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(46, 139, 87, 0.1);
+    }
+    
+    .login-form .input::placeholder {
+      color: var(--text-secondary);
+    }
+    
+    .login-divider {
+      display: flex;
+      align-items: center;
+      margin: 20px 0;
+      color: var(--text-secondary);
+      font-size: 14px;
+    }
+    
+    .login-divider::before,
+    .login-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+    
+    .login-divider span {
+      padding: 0 10px;
+    }
+    
+    .login-footer {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+    
+    .login-footer a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    
+    .login-footer a:hover {
+      text-decoration: underline;
+    }
+    
+    .back-to-onboarding {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      font-size: 14px;
+      cursor: pointer;
+      padding: 12px;
+      margin-top: 20px;
+      width: 100%;
+      transition: all 0.2s;
+    }
+    
+    .back-to-onboarding:hover {
+      color: var(--primary);
+    }
+    
+    .back-to-onboarding .icon {
+      font-size: 18px;
+    }
+    
+    /* ========== APP CONTAINER ========== */
+    #app {
+      display: none;
+      height: 100vh;
+      position: relative;
+    }
+    
+    /* ========== BOTTOM NAVIGATION (Pill-shaped) ========== */
+    .bottom-nav {
+      position: fixed;
+      bottom: 10px;
+      left: 10px;
+      right: 10px;
+      height: 60px;
+      background: var(--card-bg);
+      border-radius: 30px;
+      border: 1px solid var(--border);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      z-index: 100;
+      box-shadow: 0 4px 20px var(--shadow);
+      padding: 0 5px;
+    }
+    
+    .tab {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 12px;
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      font-size: 11px;
+      cursor: pointer;
+      transition: all 0.3s;
+      flex: 1;
+      min-height: 44px;
+      position: relative;
+      border-radius: 25px;
+    }
+    
+    .tab.active {
+      color: white;
+      background: var(--primary);
+      font-weight: 600;
+      box-shadow: 0 4px 12px rgba(46, 139, 87, 0.3);
+    }
+    
+    .tab .icon {
+      font-size: 22px;
+      margin-bottom: 4px;
+    }
+    
+    .tab-badge {
+      position: absolute;
+      top: 4px;
+      right: 20%;
+      transform: translateX(10px);
+      background: var(--accent2);
+      color: white;
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 10px;
+      min-width: 16px;
+      text-align: center;
+    }
+    
+    .tab.active .tab-badge {
+      background: white;
+      color: var(--primary);
+    }
+    
+    /* ========== PAGES ========== */
+    .page {
+      display: none;
+      height: calc(100vh - 80px);
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 80px;
+    }
+    
+    .page.active {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+    
+    /* ========== HEADER (Gradient) ========== */
+    .header {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: white;
+      padding: 20px;
+      padding-top: calc(20px + env(safe-area-inset-top));
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      border-radius: 0 0 24px 24px;
+      box-shadow: 0 4px 20px rgba(46, 139, 87, 0.3);
+    }
+    
+    .header-title {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    
+    .header-subtitle {
+      font-size: 14px;
+      opacity: 0.9;
+    }
+    
+    /* ========== CARDS ========== */
+    .card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 20px;
+      margin: 12px 16px;
+      border: 1px solid var(--border);
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 2px 8px var(--shadow);
+    }
+    
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px var(--shadow);
+    }
+    
+    .card-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: var(--text);
+    }
+    
+    .card-subtitle {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 15px;
+    }
+    
+    .card-accent {
+      border-left: 4px solid var(--primary);
+    }
+    
+    .card-accent-blue {
+      border-left: 4px solid var(--accent);
+    }
+    
+    .card-accent-orange {
+      border-left: 4px solid var(--accent2);
+    }
+    
+    .card-accent-gold {
+      border-left: 4px solid var(--accent3);
+    }
+    
+    /* ========== BUTTONS ========== */
+    .btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 16px 24px;
+      border-radius: 25px;
+      font-weight: 600;
+      font-size: 15px;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 48px;
+      width: 100%;
+      box-shadow: 0 4px 12px rgba(46, 139, 87, 0.3);
+    }
+    
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(46, 139, 87, 0.4);
+    }
+    
+    .btn:active {
+      transform: scale(0.98);
+    }
+    
+    .btn-secondary {
+      background: var(--accent);
+      box-shadow: 0 4px 12px rgba(65, 105, 225, 0.3);
+    }
+    
+    .btn-secondary:hover {
+      box-shadow: 0 6px 20px rgba(65, 105, 225, 0.4);
+    }
+    
+    .btn-accent {
+      background: var(--accent2);
+      box-shadow: 0 4px 12px rgba(255, 127, 80, 0.3);
+    }
+    
+    .btn-accent:hover {
+      box-shadow: 0 6px 20px rgba(255, 127, 80, 0.4);
+    }
+    
+    .btn-outline {
+      background: transparent;
+      border: 2px solid var(--primary);
+      color: var(--primary);
+      box-shadow: none;
+    }
+    
+    .btn-outline:hover {
+      background: var(--primary);
+      color: white;
+      box-shadow: 0 4px 12px rgba(46, 139, 87, 0.3);
+    }
+    
+    .btn-danger {
+      background: var(--danger);
+      box-shadow: 0 4px 12px rgba(244, 67, 54, 0.3);
+    }
+    
+    .btn-sm {
+      padding: 10px 16px;
+      font-size: 13px;
+      min-height: 36px;
+      border-radius: 20px;
+    }
+    
+    .btn-icon {
+      width: 44px;
+      height: 44px;
+      padding: 0;
+      border-radius: 50%;
+      min-height: 44px;
+    }
+    
+    .btn-full {
+      width: 100%;
+    }
+    
+    /* ========== INPUT FIELDS ========== */
+    .input-group {
+      margin-bottom: 20px;
+    }
+    
+    .input-label {
+      display: block;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+    
+    .input {
+      width: 100%;
+      padding: 16px;
+      background: var(--bg);
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      font-size: 16px;
+      color: var(--text);
+      transition: all 0.2s;
+    }
+    
+    .input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(46, 139, 87, 0.1);
+    }
+    
+    .input::placeholder {
+      color: var(--text-secondary);
+    }
+    
+    .input-group-inline {
+      display: flex;
+      gap: 12px;
+    }
+    
+    .input-group-inline .input-group {
+      flex: 1;
+    }
+    
+    /* ========== LANGUAGE SELECTOR ========== */
+    .language-card {
+      display: flex;
+      align-items: center;
+      padding: 16px;
+      margin: 10px 0;
+      background: var(--card-bg);
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .language-card:hover {
+      border-color: var(--primary);
+      transform: translateX(4px);
+    }
+    
+    .language-card.selected {
+      border-color: var(--primary);
+      background: linear-gradient(135deg, rgba(46, 139, 87, 0.1), rgba(65, 105, 225, 0.1));
+    }
+    
+    .language-card.disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      filter: grayscale(50%);
+    }
+    
+    .language-emoji {
+      font-size: 36px;
+      margin-right: 16px;
+    }
+    
+    .language-info {
+      flex: 1;
+    }
+    
+    .language-name {
+      font-size: 18px;
+      font-weight: 600;
+    }
+    
+    .language-speakers {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+    
+    .language-check {
+      font-size: 20px;
+      color: var(--text-secondary);
+    }
+    
+    .language-card.selected .language-check {
+      color: var(--primary);
+    }
+    
+    /* ========== SEGMENT SELECTOR ========== */
+    .segment-option {
+      display: flex;
+      align-items: center;
+      padding: 16px;
+      margin: 10px 0;
+      background: var(--card-bg);
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .segment-option:hover {
+      border-color: var(--primary);
+      transform: translateY(-2px);
+    }
+    
+    .segment-option.selected {
+      border-color: var(--primary);
+      background: linear-gradient(135deg, rgba(46, 139, 87, 0.1), rgba(65, 105, 225, 0.1));
+    }
+    
+    .segment-emoji {
+      font-size: 32px;
+      margin-right: 16px;
+    }
+    
+    .segment-info {
+      flex: 1;
+    }
+    
+    .segment-name {
+      font-size: 16px;
+      font-weight: 600;
+    }
+    
+    .segment-description {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+    
+    .segment-check {
+      font-size: 20px;
+      color: var(--text-secondary);
+    }
+    
+    .segment-option.selected .segment-check {
+      color: var(--primary);
+    }
+    
+    /* ========== LEVEL CARD (Like screenshot) ========== */
+    .level-card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 20px;
+      margin: 12px 16px;
+      border: 2px solid var(--border);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      box-shadow: 0 2px 8px var(--shadow);
+    }
+    
+    .level-card.completed {
+      border-color: var(--success);
+      background: linear-gradient(135deg, rgba(76, 175, 80, 0.1), rgba(76, 175, 80, 0.05));
+    }
+    
+    .level-card.unlocked {
+      border-color: var(--accent);
+      background: linear-gradient(135deg, rgba(65, 105, 225, 0.05), rgba(65, 105, 225, 0.02));
+    }
+    
+    .level-card.locked {
+      opacity: 0.6;
+      cursor: not-allowed;
+      filter: grayscale(50%);
+    }
+    
+    .level-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 20px var(--shadow);
+    }
+    
+    .level-card .level-badge {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      font-size: 24px;
+    }
+    
+    .level-card .level-info {
+      margin-bottom: 12px;
+    }
+    
+    .level-number {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 4px;
+    }
+    
+    .level-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    
+    .level-description {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 12px;
+      line-height: 1.5;
+    }
+    
+    .level-meta {
+      display: flex;
+      gap: 16px;
+      font-size: 12px;
+      color: var(--text-secondary);
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+      margin-top: 12px;
+    }
+    
+    .level-meta span {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    
+    /* ========== PROGRESS BAR ========== */
+    .progress-bar {
+      height: 8px;
+      background: var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      margin: 10px 0;
+    }
+    
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), var(--primary-light));
+      border-radius: 4px;
+      transition: width 0.3s ease;
+    }
+    
+    .progress-bar-thin {
+      height: 4px;
+    }
+    
+    /* ========== MODALS ========== */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+      padding: 20px;
+      backdrop-filter: blur(4px);
+    }
+    
+    .modal-overlay.active {
+      display: flex;
+      animation: fadeIn 0.2s ease;
+    }
+    
+    .modal {
+      background: var(--card-bg);
+      border-radius: 20px;
+      width: 100%;
+      max-width: 500px;
+      max-height: 90vh;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+    
+    .modal-header {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border);
+      font-size: 20px;
+      font-weight: 700;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .modal-close {
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      font-size: 24px;
+      cursor: pointer;
+      padding: 8px;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .modal-content {
+      padding: 24px;
+      overflow-y: auto;
+      max-height: calc(90vh - 100px);
+    }
+    
+    .modal-footer {
+      padding: 16px 24px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+    }
+    
+    /* ========== TOAST ========== */
+    .toast {
+      position: fixed;
+      bottom: 90px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--text);
+      color: var(--bg);
+      padding: 12px 24px;
+      border-radius: 25px;
+      z-index: 10000;
+      font-size: 14px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      max-width: 90%;
+      text-align: center;
+      animation: slideUp 0.3s ease;
+    }
+    
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+      to { opacity: 1; transform: translateX(-50%) translateY(0); }
+    }
+    
+    /* ========== TIMMY CHAT ========== */
+    .timmy-container {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+    
+    .timmy-chat-header {
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      color: white;
+      padding: 16px;
+      padding-top: calc(16px + env(safe-area-inset-top));
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-radius: 0 0 16px 16px;
+    }
+    
+    .timmy-chat-title {
+      font-size: 18px;
+      font-weight: 600;
+      flex: 1;
+    }
+    
+    .timmy-chat-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+    
+    .timmy-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+      -webkit-overflow-scrolling: touch;
+    }
+    
+    .timmy-message {
+      margin-bottom: 16px;
+      display: flex;
+      max-width: 85%;
+    }
+    
+    .timmy-message.bot {
+      align-self: flex-start;
+    }
+    
+    .timmy-message.user {
+      align-self: flex-end;
+      margin-left: auto;
+    }
+    
+    .timmy-message-bubble {
+      padding: 12px 16px;
+      border-radius: 16px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      word-wrap: break-word;
+      line-height: 1.5;
+    }
+    
+    .timmy-message.user .timmy-message-bubble {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+      border-bottom-right-radius: 4px;
+      box-shadow: 0 4px 12px rgba(46, 139, 87, 0.3);
+    }
+    
+    .timmy-message.bot .timmy-message-bubble {
+      border-bottom-left-radius: 4px;
+    }
+    
+    .timmy-input {
+      padding: 12px 16px;
+      background: var(--card-bg);
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding-bottom: calc(12px + env(safe-area-inset-bottom));
+    }
+    
+    .timmy-input input {
+      flex: 1;
+      padding: 12px 16px;
+      background: var(--bg);
+      border: 2px solid var(--border);
+      border-radius: 24px;
+      font-size: 15px;
+      color: var(--text);
+    }
+    
+    .timmy-input input:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+    
+    .timmy-send-btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 18px;
+      box-shadow: 0 4px 12px rgba(46, 139, 87, 0.3);
+    }
+    
+    /* ========== LESSON FLOW ========== */
+    .lesson-flow {
+      position: fixed;
+      inset: 0;
+      background: var(--bg);
+      z-index: 1500;
+      display: none;
+    }
+    
+    .lesson-flow.active {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .lesson-progress {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      padding: 16px;
+      padding-top: calc(16px + env(safe-area-inset-top));
+      background: var(--card-bg);
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .progress-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--border);
+      transition: all 0.3s;
+    }
+    
+    .progress-dot.active {
+      background: var(--primary);
+      transform: scale(1.3);
+      box-shadow: 0 0 8px rgba(46, 139, 87, 0.5);
+    }
+    
+    .progress-dot.completed {
+      background: var(--success);
+    }
+    
+    .lesson-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+      -webkit-overflow-scrolling: touch;
+    }
+    
+    .lesson-nav {
+      padding: 16px;
+      background: var(--card-bg);
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      padding-bottom: calc(16px + env(safe-area-inset-bottom));
+    }
+    
+    .lesson-nav .btn {
+      flex: 1;
+      min-height: 44px;
+    }
+    
+    /* ========== LESSON QUESTION ========== */
+    .question {
+      margin-bottom: 24px;
+    }
+    
+    .question-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+    
+    .option {
+      padding: 16px;
+      margin: 10px 0;
+      background: var(--card-bg);
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+      min-height: 48px;
+    }
+    
+    .option:hover {
+      border-color: var(--primary);
+      transform: translateX(4px);
+    }
+    
+    .option.selected {
+      border-color: var(--primary);
+      background: linear-gradient(135deg, rgba(46, 139, 87, 0.1), rgba(65, 105, 225, 0.1));
+      box-shadow: 0 4px 12px rgba(46, 139, 87, 0.2);
+    }
+    
+    .option.correct {
+      border-color: var(--success);
+      background: rgba(76, 175, 80, 0.1);
+    }
+    
+    .option.wrong {
+      border-color: var(--danger);
+      background: rgba(244, 67, 54, 0.1);
+    }
+    
+    /* ========== VOCABULARY CARD ========== */
+    .vocab-card {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px;
+      margin: 10px 0;
+      background: var(--card-bg);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      transition: all 0.2s;
+    }
+    
+    .vocab-card:hover {
+      border-color: var(--primary);
+      transform: translateX(4px);
+    }
+    
+    .vocab-word {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--primary);
+    }
+    
+    .vocab-pronunciation {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-top: 2px;
+    }
+    
+    .vocab-translation {
+      font-size: 14px;
+      margin-top: 4px;
+    }
+    
+    .vocab-example {
+      font-size: 13px;
+      color: var(--text-secondary);
+      font-style: italic;
+      margin-top: 4px;
+    }
+    
+    .audio-btn {
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 50%;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 18px;
+      box-shadow: 0 4px 12px rgba(65, 105, 225, 0.3);
+      transition: all 0.2s;
+    }
+    
+    .audio-btn:hover {
+      transform: scale(1.1);
+    }
+    
+    /* ========== SETTINGS ITEMS ========== */
+    .settings-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px;
+      margin-bottom: 10px;
+      background: var(--bg);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .settings-item:hover {
+      background: var(--card-bg-dark);
+      transform: translateX(4px);
+    }
+    
+    .settings-item-icon {
+      font-size: 20px;
+      margin-right: 12px;
+    }
+    
+    .settings-item-label {
+      font-size: 15px;
+      font-weight: 500;
+      flex: 1;
+    }
+    
+    .settings-item-value {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-right: 8px;
+    }
+    
+    .toggle-switch {
+      width: 48px;
+      height: 28px;
+      background: var(--border);
+      border-radius: 14px;
+      position: relative;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    
+    .toggle-switch.active {
+      background: var(--primary);
+    }
+    
+    .toggle-switch::after {
+      content: '';
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 22px;
+      height: 22px;
+      background: white;
+      border-radius: 50%;
+      transition: transform 0.2s;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+    
+    .toggle-switch.active::after {
+      transform: translateX(20px);
+    }
+    
+    .rating-stars {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      margin: 15px 0;
+    }
+    
+    .star {
+      font-size: 32px;
+      cursor: pointer;
+      color: var(--text-secondary);
+      transition: all 0.2s;
+      user-select: none;
+    }
+    
+    .star:hover {
+      transform: scale(1.2);
+    }
+    
+    .star.active {
+      color: var(--accent3);
+    }
+    
+    /* ========== ROADMAP ========== */
+    .roadmap-item {
+      display: flex;
+      align-items: center;
+      padding: 12px;
+      margin: 8px 0;
+      background: var(--bg);
+      border-radius: 12px;
+      border-left: 4px solid var(--border);
+      transition: all 0.2s;
+    }
+    
+    .roadmap-item.done {
+      border-left-color: var(--success);
+      background: linear-gradient(135deg, rgba(76, 175, 80, 0.1), rgba(76, 175, 80, 0.02));
+    }
+    
+    .roadmap-item.next {
+      border-left-color: var(--warning);
+      background: linear-gradient(135deg, rgba(255, 152, 0, 0.1), rgba(255, 152, 0, 0.02));
+    }
+    
+    .roadmap-item.locked {
+      opacity: 0.6;
+    }
+    
+    .roadmap-icon {
+      font-size: 24px;
+      margin-right: 12px;
+    }
+    
+    .roadmap-info {
+      flex: 1;
+    }
+    
+    .roadmap-title {
+      font-weight: 600;
+      font-size: 15px;
+    }
+    
+    .roadmap-desc {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+    
+    .roadmap-status {
+      font-size: 20px;
+    }
+    
+    /* ========== ACHIEVEMENTS ========== */
+    .achievement-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+      gap: 10px;
+      padding: 10px 0;
+    }
+    
+    .achievement-badge {
+      text-align: center;
+      padding: 15px 10px;
+      background: var(--bg);
+      border-radius: 12px;
+      border: 2px solid var(--border);
+      transition: all 0.2s;
+    }
+    
+    .achievement-badge.unlocked {
+      border-color: var(--accent3);
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(46, 139, 87, 0.1));
+    }
+    
+    .achievement-badge.locked {
+      opacity: 0.4;
+      filter: grayscale(100%);
+    }
+    
+    .achievement-icon {
+      font-size: 32px;
+      margin-bottom: 5px;
+    }
+    
+    .achievement-name {
+      font-size: 10px;
+      font-weight: 600;
+    }
+    
+    /* ========== LEADERBOARD ========== */
+    .leaderboard-item {
+      display: flex;
+      align-items: center;
+      padding: 12px;
+      margin: 8px 0;
+      background: var(--bg);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      transition: all 0.2s;
+    }
+    
+    .leaderboard-item.you {
+      border-color: var(--primary);
+      background: linear-gradient(135deg, rgba(46, 139, 87, 0.1), rgba(65, 105, 225, 0.1));
+    }
+    
+    .leaderboard-rank {
+      width: 30px;
+      font-weight: 700;
+      font-size: 18px;
+      text-align: center;
+    }
+    
+    .leaderboard-rank.gold {
+      color: #FFD700;
+    }
+    
+    .leaderboard-rank.silver {
+      color: #C0C0C0;
+    }
+    
+    .leaderboard-rank.bronze {
+      color: #CD7F32;
+    }
+    
+    .leaderboard-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      font-size: 14px;
+      margin: 0 10px;
+      flex-shrink: 0;
+    }
+    
+    .leaderboard-name {
+      flex: 1;
+      font-weight: 500;
+    }
+    
+    .leaderboard-xp {
+      font-weight: 700;
+      color: var(--primary);
+    }
+    
+    .leaderboard-level {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-right: 10px;
+    }
+    
+    /* ========== CUSTOM LESSON TRIGGER ========== */
+    .custom-lesson-trigger {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px;
+      margin: 8px 16px;
+      background: var(--card-bg);
+      border-radius: 25px;
+      border: 2px solid var(--primary);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .custom-lesson-trigger:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(46, 139, 87, 0.2);
+    }
+    
+    .custom-lesson-trigger .left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+      color: var(--primary);
+    }
+    
+    .custom-lesson-trigger .counter {
+      font-size: 13px;
+      color: var(--text-secondary);
+      background: var(--bg);
+      padding: 4px 12px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+    }
+    
+    /* ========== FILTER BUTTONS ========== */
+    .filter-buttons {
+      display: flex;
+      gap: 8px;
+      padding: 0 16px 16px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    
+    .filter-btn {
+      padding: 10px 16px;
+      background: var(--card-bg);
+      border: 2px solid var(--border);
+      border-radius: 20px;
+      color: var(--text);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+      min-height: 40px;
+    }
+    
+    .filter-btn:hover {
+      border-color: var(--primary);
+    }
+    
+    .filter-btn.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: white;
+      box-shadow: 0 4px 12px rgba(46, 139, 87, 0.3);
+    }
+    
+    /* ========== SEARCH INPUT ========== */
+    .search-container {
+      padding: 16px;
+    }
+    
+    .search-input {
+      width: 100%;
+      padding: 14px 16px;
+      background: var(--card-bg);
+      border: 2px solid var(--border);
+      border-radius: 25px;
+      font-size: 15px;
+      color: var(--text);
+      transition: all 0.2s;
+    }
+    
+    .search-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(46, 139, 87, 0.1);
+    }
+    
+    .search-input::placeholder {
+      color: var(--text-secondary);
+    }
+    
+    /* ========== RESPONSIVE ========== */
+    @media (max-width: 768px) {
+      .card {
+        margin: 10px 12px;
+        padding: 16px;
+      }
+      
+      .level-card {
+        margin: 10px 12px;
+        padding: 16px;
+      }
+      
+      .modal {
+        margin: 0;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .header {
+        padding: 16px;
+      }
+      
+      .header-title {
+        font-size: 20px;
+      }
+      
+      .btn {
+        padding: 14px 20px;
+      }
+      
+      .timmy-message {
+        max-width: 90%;
+      }
+      
+      .bottom-nav {
+        bottom: 5px;
+        left: 5px;
+        right: 5px;
+        height: 55px;
+      }
+    }
+    
+    @media (min-width: 769px) {
+      body {
+        max-width: 600px;
+        margin: 0 auto;
+        box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
+      }
+      
+      #app {
+        max-width: 600px;
+        margin: 0 auto;
+      }
+      
+      .bottom-nav {
+        max-width: 580px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+    }
+  </style>
+</head>
+<body class="dark-theme">
+  
+  <!-- ========== ONBOARDING ========== -->
+  <div id="onboarding">
+    <!-- Step 1: Welcome -->
+    <div class="onboarding-step active" id="onboard-step-1">
+      <div class="onboarding-progress">
+        <div class="onboarding-dot active"></div>
+        <div class="onboarding-dot"></div>
+        <div class="onboarding-dot"></div>
+        <div class="onboarding-dot"></div>
+      </div>
+      <div class="step-emoji">🗣️</div>
+      <div class="step-title">Welcome to ClearWords</div>
+      <div class="step-description">Learn Nigerian languages through interactive lessons, AI conversation, and cultural insights. Join thousands of learners connecting with their heritage.</div>
+      <div class="onboarding-nav">
+        <button class="btn" onclick="goToStep(2)">Get Started</button>
+      </div>
+    </div>
+    
+    <!-- Step 2: Personal Details -->
+    <div class="onboarding-step" id="onboard-step-2">
+      <div class="onboarding-progress">
+        <div class="onboarding-dot completed"></div>
+        <div class="onboarding-dot active"></div>
+        <div class="onboarding-dot"></div>
+        <div class="onboarding-dot"></div>
+      </div>
+      <div class="step-title">Tell us about yourself</div>
+      <div class="step-description">We'll personalize your learning experience</div>
+      
+      <div class="auth-form">
+        <div class="input-group-inline">
+          <div class="input-group">
+            <label class="input-label">First Name</label>
+            <input type="text" class="input" id="signup-firstname" placeholder="Your first name" autocomplete="given-name">
+          </div>
+          <div class="input-group">
+            <label class="input-label">Last Name</label>
+            <input type="text" class="input" id="signup-lastname" placeholder="Your last name" autocomplete="family-name">
+          </div>
+        </div>
+        <div class="input-group">
+          <label class="input-label">Email</label>
+          <input type="email" class="input" id="signup-email" placeholder="your@email.com" autocomplete="email">
+        </div>
+        <div class="input-group">
+          <label class="input-label">Phone (Optional)</label>
+          <input type="tel" class="input" id="signup-phone" placeholder="+234 XXX XXX XXXX" autocomplete="tel">
+        </div>
+      </div>
+      
+      <div class="onboarding-nav">
+        <button class="btn btn-outline" onclick="goToStep(1)" style="flex: 0.5;">← Back</button>
+        <button class="btn" onclick="goToStep(3)" style="flex: 1.5;">Continue →</button>
+      </div>
+      
+      <div class="login-link-container" style="text-align: center; margin-top: 20px; padding: 16px; background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border);">
+        <div style="font-size: 14px; color: var(--text-secondary);">Already have an account?</div>
+        <button class="login-link-btn" onclick="showLoginPage()" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: none; border: none; color: var(--primary); font-size: 15px; font-weight: 600; cursor: pointer; padding: 8px 16px; border-radius: 20px; transition: all 0.2s; margin-top: 8px;">
+          <span>🔑</span>
+          Log In Here
+        </button>
+      </div>
+    </div>
+    
+    <!-- Step 3: Language -->
+    <div class="onboarding-step" id="onboard-step-3">
+      <div class="onboarding-progress">
+        <div class="onboarding-dot completed"></div>
+        <div class="onboarding-dot completed"></div>
+        <div class="onboarding-dot active"></div>
+        <div class="onboarding-dot"></div>
+      </div>
+      <div class="step-title">Choose a Language</div>
+      <div class="step-description">Pick one language to start learning</div>
+      
+      <div id="onboarding-language-list">
+        <div class="language-card" onclick="selectOnboardingLanguage('yoruba', this)">
+          <div class="language-emoji">👑</div>
+          <div class="language-info">
+            <div class="language-name">Yoruba</div>
+            <div class="language-speakers">44M+ speakers</div>
+          </div>
+          <span class="language-check">○</span>
+        </div>
+        <div class="language-card" onclick="selectOnboardingLanguage('hausa', this)">
+          <div class="language-emoji">🕌</div>
+          <div class="language-info">
+            <div class="language-name">Hausa</div>
+            <div class="language-speakers">50M+ speakers</div>
+          </div>
+          <span class="language-check">○</span>
+        </div>
+        <div class="language-card" onclick="selectOnboardingLanguage('igbo', this)">
+          <div class="language-emoji">🌍</div>
+          <div class="language-info">
+            <div class="language-name">Igbo</div>
+            <div class="language-speakers">34M+ speakers</div>
+          </div>
+          <span class="language-check">○</span>
+        </div>
+        <div class="language-card" onclick="selectOnboardingLanguage('pidgin', this)">
+          <div class="language-emoji">🗣️</div>
+          <div class="language-info">
+            <div class="language-name">Pidgin</div>
+            <div class="language-speakers">75M+ speakers</div>
+          </div>
+          <span class="language-check">○</span>
+        </div>
+        <div class="language-card disabled">
+          <div class="language-emoji">⚓</div>
+          <div class="language-info">
+            <div class="language-name">Urhobo</div>
+            <div class="language-speakers">2M+ speakers</div>
+          </div>
+          <span class="language-check">🔒</span>
+        </div>
+        <div class="language-card disabled">
+          <div class="language-emoji">⚖️</div>
+          <div class="language-info">
+            <div class="language-name">Itsekiri</div>
+            <div class="language-speakers">1M+ speakers</div>
+          </div>
+          <span class="language-check">🔒</span>
+        </div>
+      </div>
+      
+      <div class="onboarding-nav">
+        <button class="btn btn-outline" onclick="goToStep(2)" style="flex: 0.5;">← Back</button>
+        <button class="btn" onclick="goToStep(4)" id="onboard-language-next" disabled style="flex: 1.5;">Continue →</button>
+      </div>
+    </div>
+    
+    <!-- Step 4: Segment -->
+    <div class="onboarding-step" id="onboard-step-4">
+      <div class="onboarding-progress">
+        <div class="onboarding-dot completed"></div>
+        <div class="onboarding-dot completed"></div>
+        <div class="onboarding-dot completed"></div>
+        <div class="onboarding-dot active"></div>
+      </div>
+      <div class="step-title">Who are you?</div>
+      <div class="step-description">Choose the option that best describes you</div>
+      
+      <div class="segment-option" onclick="selectOnboardingSegment('parent', this)">
+        <div class="segment-emoji">👨‍👩‍👧‍👦</div>
+        <div class="segment-info">
+          <div class="segment-name">Diaspora Parent</div>
+          <div class="segment-description">Teaching my children our heritage language</div>
+        </div>
+        <span class="segment-check">○</span>
+      </div>
+      <div class="segment-option" onclick="selectOnboardingSegment('young', this)">
+        <div class="segment-emoji">🌟</div>
+        <div class="segment-info">
+          <div class="segment-name">Young Diaspora</div>
+          <div class="segment-description">Connecting with my roots and culture</div>
+        </div>
+        <span class="segment-check">○</span>
+      </div>
+      <div class="segment-option" onclick="selectOnboardingSegment('pro', this)">
+        <div class="segment-emoji">💼</div>
+        <div class="segment-info">
+          <div class="segment-name">Professional</div>
+          <div class="segment-description">Learning for business or career growth</div>
+        </div>
+        <span class="segment-check">○</span>
+      </div>
+      <div class="segment-option" onclick="selectOnboardingSegment('marriage', this)">
+        <div class="segment-emoji">💕</div>
+        <div class="segment-info">
+          <div class="segment-name">Marriage/Family</div>
+          <div class="segment-description">Connecting with partner's Nigerian family</div>
+        </div>
+        <span class="segment-check">○</span>
+      </div>
+      <div class="segment-option" onclick="selectOnboardingSegment('nigeria', this)">
+        <div class="segment-emoji">🇳🇬</div>
+        <div class="segment-info">
+          <div class="segment-name">In-Nigeria Learner</div>
+          <div class="segment-description">Learning another Nigerian language</div>
+        </div>
+        <span class="segment-check">○</span>
+      </div>
+      
+      <div class="onboarding-nav">
+        <button class="btn btn-outline" onclick="goToStep(3)" style="flex: 0.5;">← Back</button>
+        <button class="btn" onclick="completeOnboarding()" id="onboard-segment-next" disabled style="flex: 1.5;">Create Account →</button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- ========== LOGIN PAGE ========== -->
+  <div id="login-page" style="display: none; height: 100vh; overflow-y: auto;">
+    <div class="login-container">
+      <div class="login-logo">🗣️</div>
+      <div class="login-title">Welcome Back!</div>
+      <div class="login-subtitle">Login to continue your language journey</div>
+      
+      <div class="login-form">
+        <div class="input-group">
+          <label class="input-label">Email</label>
+          <input type="email" class="input" id="login-email" placeholder="your@email.com" autocomplete="email">
+        </div>
+        <div class="input-group">
+          <label class="input-label">Password</label>
+          <input type="password" class="input" id="login-password" placeholder="Your password" autocomplete="current-password">
+        </div>
+        <button class="btn" onclick="login()">Login</button>
+        
+        <div class="login-divider">
+          <span>or</span>
+        </div>
+        
+        <button class="btn btn-outline" onclick="loginWithGoogle()">
+          <span>G</span>
+          Continue with Google
+        </button>
+        
+        <div class="login-footer">
+          Don't have an account? <a onclick="showOnboarding()">Sign Up</a>
+        </div>
+      </div>
+      
+      <button class="back-to-onboarding" onclick="showOnboarding()">
+        <span>←</span>
+        Back to Sign Up
+      </button>
+    </div>
+  </div>
+  
+  <!-- ========== APP CONTAINER ========== -->
+  <div id="app" style="display: none;">
+    <!-- Home Page -->
+    <div class="page active" id="home-page">
+      <div class="header">
+        <div class="header-title" id="home-title">Welcome!</div>
+        <div class="header-subtitle" id="home-subtitle"></div>
+      </div>
+      
+      <div class="card card-accent">
+        <div class="card-title">Today's Progress</div>
+        <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+          <span id="daily-progress">0/5 lessons</span>
+          <span id="streak-count">🔥 0</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="daily-progress-bar" style="width: 0%"></div>
+        </div>
+      </div>
+      
+      <div class="card card-accent-blue">
+        <div class="card-title">Continue Learning</div>
+        <div id="continue-lesson"></div>
+      </div>
+      
+      <div class="card card-accent-orange">
+        <div class="card-title">Your Roadmap</div>
+        <div id="roadmap-container"></div>
+      </div>
+      
+      <div class="card card-accent-gold">
+        <div class="card-title">Achievements</div>
+        <div class="achievement-grid" id="achievements-container"></div>
+      </div>
+    </div>
+    
+    <!-- Lessons Page -->
+    <div class="page" id="lessons-page">
+      <div class="header">
+        <div class="header-title" id="lessons-title">Lessons</div>
+        <div class="header-subtitle" id="lessons-subtitle"></div>
+      </div>
+      
+      <div class="search-container">
+        <input type="text" class="search-input" id="lesson-search" placeholder="Search lessons..." oninput="searchLessons()">
+      </div>
+      
+      <div class="filter-buttons">
+        <button class="btn btn-sm filter-btn active" data-filter="all" onclick="filterLevels('all')">All</button>
+        <button class="btn btn-sm filter-btn" data-filter="completed" onclick="filterLevels('completed')">Completed</button>
+        <button class="btn btn-sm filter-btn" data-filter="unlocked" onclick="filterLevels('unlocked')">Unlocked</button>
+        <button class="btn btn-sm filter-btn" data-filter="locked" onclick="filterLevels('locked')">Locked</button>
+      </div>
+      
+      <div class="custom-lesson-trigger" onclick="openCustomLessonModal()">
+        <div class="left">⚡ Create Instant Lesson</div>
+        <div class="counter" id="custom-counter">0/5 today</div>
+      </div>
+      
+      <div id="levels-container"></div>
+    </div>
+    
+    <!-- Timmy Page -->
+    <div class="page" id="timmy-page">
+      <div class="timmy-container">
+        <div class="timmy-chat-header">
+          <div class="timmy-chat-avatar">🤓</div>
+          <div class="timmy-chat-title">Timmy AI</div>
+        </div>
+        
+        <div class="timmy-messages" id="timmy-messages">
+          <div class="timmy-message bot">
+            <div class="timmy-message-bubble">Hello! I'm Timmy, your Nigerian language tutor. How can I help you today?</div>
+          </div>
+        </div>
+        
+        <div class="timmy-input">
+          <input type="text" id="timmy-input" placeholder="Message Timmy..." onkeypress="handleTimmyKeyPress(event)">
+          <button class="timmy-send-btn" onclick="sendTimmyMessage()">➤</button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Settings Page -->
+    <div class="page" id="settings-page">
+      <div class="header">
+        <div class="header-title">Settings</div>
+        <div class="header-subtitle">Manage your experience</div>
+      </div>
+      
+      <div class="card">
+        <div class="card-title">Profile</div>
+        <div class="settings-item" onclick="showProfileModal()">
+          <span class="settings-item-icon">👤</span>
+          <span class="settings-item-label">Profile</span>
+          <span class="settings-item-value" id="profile-name">Not set</span>
+          <span>→</span>
+        </div>
+        <div class="settings-item" onclick="showLanguageModal()">
+          <span class="settings-item-icon">🌍</span>
+          <span class="settings-item-label">Language</span>
+          <span class="settings-item-value" id="current-language">Not set</span>
+          <span>→</span>
+        </div>
+        <div class="settings-item" onclick="showSegmentModal()">
+          <span class="settings-item-icon">🎯</span>
+          <span class="settings-item-label">Learning Style</span>
+          <span class="settings-item-value" id="current-segment">Not set</span>
+          <span>→</span>
+        </div>
+      </div>
+      
+      <div class="card">
+        <div class="card-title">Appearance</div>
+        <div class="settings-item" onclick="toggleTheme()">
+          <span class="settings-item-icon">🌓</span>
+          <span class="settings-item-label">Dark Mode</span>
+          <div class="toggle-switch" id="theme-toggle"></div>
+        </div>
+      </div>
+      
+      <div class="card">
+        <div class="card-title">Data</div>
+        <div class="settings-item" onclick="exportProgress()">
+          <span class="settings-item-icon">📤</span>
+          <span class="settings-item-label">Export Progress</span>
+          <span>→</span>
+        </div>
+        <div class="settings-item" onclick="importProgress()">
+          <span class="settings-item-icon">📥</span>
+          <span class="settings-item-label">Import Progress</span>
+          <span>→</span>
+        </div>
+      </div>
+      
+      <div class="card">
+        <div class="card-title">Feedback</div>
+        <div class="rating-stars" id="rating-stars">
+          <span class="star" data-value="1">☆</span>
+          <span class="star" data-value="2">☆</span>
+          <span class="star" data-value="3">☆</span>
+          <span class="star" data-value="4">☆</span>
+          <span class="star" data-value="5">☆</span>
+        </div>
+        <textarea class="input" id="feedback-text" rows="3" placeholder="Share your thoughts..." style="margin-top: 10px;"></textarea>
+        <button class="btn" onclick="submitFeedback()" style="margin-top: 10px;">Send Feedback</button>
+      </div>
+      
+      <div class="card">
+        <div class="card-title">About</div>
+        <div class="settings-item" onclick="showAboutModal()">
+          <span class="settings-item-icon">ℹ️</span>
+          <span class="settings-item-label">About ClearWords</span>
+          <span>→</span>
+        </div>
+        <div class="settings-item" onclick="showPrivacyModal()">
+          <span class="settings-item-icon">🔒</span>
+          <span class="settings-item-label">Privacy Policy</span>
+          <span>→</span>
+        </div>
+        <div class="settings-item" onclick="showTermsModal()">
+          <span class="settings-item-icon">📜</span>
+          <span class="settings-item-label">Terms of Service</span>
+          <span>→</span>
+        </div>
+      </div>
+      
+      <div class="card" style="border: 2px solid var(--danger);">
+        <div class="settings-item" onclick="showResetModal()" style="color: var(--danger);">
+          <span class="settings-item-icon">🗑️</span>
+          <span class="settings-item-label">Reset Progress</span>
+          <span>→</span>
+        </div>
+      </div>
+      
+      <div class="card">
+        <button class="btn btn-outline" onclick="logout()">Logout</button>
+      </div>
+    </div>
+    
+    <!-- Bottom Navigation (Pill-shaped) -->
+    <nav class="bottom-nav">
+      <button class="tab active" data-page="home" onclick="showPage('home')">
+        <span class="icon">🏠</span>
+        <span class="label">Home</span>
+      </button>
+      <button class="tab" data-page="lessons" onclick="showPage('lessons')">
+        <span class="icon">📚</span>
+        <span class="label">Learn</span>
+        <span class="tab-badge" id="lessons-badge" style="display: none;"></span>
+      </button>
+      <button class="tab" data-page="timmy" onclick="showPage('timmy')">
+        <span class="icon">🤓</span>
+        <span class="label">Timmy</span>
+      </button>
+      <button class="tab" data-page="settings" onclick="showPage('settings')">
+        <span class="icon">⚙️</span>
+        <span class="label">Profile</span>
+      </button>
+    </nav>
+  </div>
+  
+  <!-- ========== LESSON FLOW ========== -->
+  <div class="lesson-flow" id="lesson-flow">
+    <div class="lesson-progress" id="lesson-progress"></div>
+    <div class="lesson-content" id="lesson-content"></div>
+    <div class="lesson-nav">
+      <button class="btn btn-outline" onclick="prevLessonCard()" id="prev-btn" style="display: none;">←</button>
+      <button class="btn" onclick="nextLessonCard()" id="next-btn">Next →</button>
+    </div>
+  </div>
+  
+  <!-- TOAST CONTAINER -->
+  <div id="toast-container"></div>
+  
+  <script>
+    // ==================== CONFIGURATION ====================
+    const API_BASE_URL = 'https://clearwords-backend.onrender.com';
+    const SUPABASE_URL = 'https://megxgmsivslzdxaqxxpl.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1lZ3hnbXNpdnNsemR4YXF4eHBsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ0NzA4MzIsImV4cCI6MjEwMDA0NjgzMn0.hJmwvrXhhGADlHxkciTzq2TgQo25QCdKv142at9_jyw';
+    const SUPABASE_BUCKET = 'audio';
+    
+    // ==================== STATE ====================
+    let state = {
+      user: null,
+      authToken: null,
+      currentPage: 'home',
+      currentLanguage: 'yoruba',
+      currentSegment: null,
+      currentLesson: null,
+      lessonCardIndex: 0,
+      curriculumData: {},
+      filteredLevels: 'all',
+      searchQuery: '',
+      isDarkTheme: true,
+      notificationsEnabled: false,
+      offlineMode: false,
+      timmyChats: [],
+      currentChatId: null,
+      feedbackRating: 0,
+      onboardingStep: 1,
+      onboardingLanguage: null,
+      onboardingSegment: null
+    };
+    
+    // ==================== LANGUAGE CONFIG ====================
+    const languages = {
+      yoruba: { name: 'Yoruba', nativeName: 'Yorùbá', emoji: '👑', speakers: '44M+', available: true },
+      hausa: { name: 'Hausa', nativeName: 'Hausa', emoji: '🕌', speakers: '50M+', available: true },
+      igbo: { name: 'Igbo', nativeName: 'Igbo', emoji: '🌍', speakers: '34M+', available: true },
+      pidgin: { name: 'Pidgin', nativeName: 'Naija Pidgin', emoji: '🗣️', speakers: '75M+', available: true },
+      urhobo: { name: 'Urhobo', nativeName: 'Urhobo', emoji: '⚓', speakers: '2M+', available: false },
+      itsekiri: { name: 'Itsekiri', nativeName: 'Itsekiri', emoji: '⚖️', speakers: '1M+', available: false }
+    };
+    
+    const segmentConfigs = {
+      parent: { name: 'Diaspora Parent', emoji: '👨‍👩‍👧‍👦', description: 'Teaching my children our heritage language' },
+      young: { name: 'Young Diaspora', emoji: '🌟', description: 'Connecting with my roots and culture' },
+      pro: { name: 'Professional', emoji: '💼', description: 'Learning for business or career growth' },
+      marriage: { name: 'Marriage/Family', emoji: '💕', description: 'Connecting with partner\'s Nigerian family' },
+      nigeria: { name: 'In-Nigeria Learner', emoji: '🇳🇬', description: 'Learning another Nigerian language' }
+    };
+    
+    // ==================== STORAGE ====================
+    const storage = {
+      async get(key) {
+        try {
+          if (window.Capacitor) {
+            const { Preferences } = await import('@capacitor/preferences');
+            const { value } = await Preferences.get({ key });
+            return value ? JSON.parse(value) : null;
+          }
+          return JSON.parse(localStorage.getItem(key));
+        } catch (e) {
+          return JSON.parse(localStorage.getItem(key));
+        }
+      },
+      
+      async set(key, value) {
+        try {
+          if (window.Capacitor) {
+            const { Preferences } = await import('@capacitor/preferences');
+            await Preferences.set({ key, value: JSON.stringify(value) });
+            return;
+          }
+          localStorage.setItem(key, JSON.stringify(value));
+        } catch (e) {
+          localStorage.setItem(key, JSON.stringify(value));
+        }
+      },
+      
+      async remove(key) {
+        try {
+          if (window.Capacitor) {
+            const { Preferences } = await import('@capacitor/preferences');
+            await Preferences.remove({ key });
+            return;
+          }
+          localStorage.removeItem(key);
+        } catch (e) {
+          localStorage.removeItem(key);
+        }
+      }
+    };
+    
+    // ==================== TOAST ====================
+    function showToast(message, duration = 3000) {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.textContent = message;
+      container.appendChild(toast);
+      
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+      }, duration);
+    }
+    
+    // ==================== ONBOARDING NAVIGATION ====================
+    function goToStep(step) {
+      document.querySelectorAll('.onboarding-step').forEach(s => s.classList.remove('active'));
+      document.getElementById(`onboard-step-${step}`).classList.add('active');
+      state.onboardingStep = step;
+    }
+    
+    function selectOnboardingLanguage(lang, element) {
+      if (!languages[lang]?.available) return;
+      
+      document.querySelectorAll('#onboarding-language-list .language-card').forEach(c => {
+        c.classList.remove('selected');
+        c.querySelector('.language-check').textContent = '○';
+      });
+      
+      element.classList.add('selected');
+      element.querySelector('.language-check').textContent = '●';
+      state.onboardingLanguage = lang;
+      
+      document.getElementById('onboard-language-next').disabled = false;
+    }
+    
+    function selectOnboardingSegment(seg, element) {
+      document.querySelectorAll('.segment-option').forEach(c => {
+        c.classList.remove('selected');
+        c.querySelector('.segment-check').textContent = '○';
+      });
+      
+      element.classList.add('selected');
+      element.querySelector('.segment-check').textContent = '●';
+      state.onboardingSegment = seg;
+      
+      document.getElementById('onboard-segment-next').disabled = false;
+    }
+    
+    async function completeOnboarding() {
+      const firstName = document.getElementById('signup-firstname').value.trim();
+      const lastName = document.getElementById('signup-lastname').value.trim();
+      const email = document.getElementById('signup-email').value.trim();
+      const phone = document.getElementById('signup-phone').value.trim();
+      
+      if (!firstName) {
+        showToast('Please enter your first name');
+        goToStep(2);
+        return;
+      }
+      
+      if (!email) {
+        showToast('Please enter your email');
+        goToStep(2);
+        return;
+      }
+      
+      if (!state.onboardingLanguage) {
+        showToast('Please select a language');
+        goToStep(3);
+        return;
+      }
+      
+      if (!state.onboardingSegment) {
+        showToast('Please select your learning style');
+        goToStep(4);
+        return;
+      }
+      
+      try {
+        showToast('Creating your account...');
+        
+        const response = await fetch(`${API_BASE_URL}/api/auth/signup`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            fullName: `${firstName} ${lastName}`.trim(),
+            email,
+            phone,
+            language: state.onboardingLanguage,
+            segment: state.onboardingSegment
+          })
+        });
+        
+        if (!response.ok) {
+          const error = await response.json();
+          throw new Error(error.error || 'Signup failed');
+        }
+        
+        const data = await response.json();
+        state.user = data.user;
+        state.authToken = data.token;
+        state.currentLanguage = state.onboardingLanguage;
+        state.currentSegment = state.onboardingSegment;
+        
+        await storage.set('authToken', data.token);
+        await storage.set('user', data.user);
+        
+        showApp();
+        
+      } catch (e) {
+        if (e.message.includes('fetch') || e.message.includes('network')) {
+          state.user = {
+            id: 'local_' + Date.now(),
+            fullName: `${firstName} ${lastName}`.trim(),
+            email,
+            language: state.onboardingLanguage,
+            segment: state.onboardingSegment
+          };
+          state.authToken = 'local_token';
+          state.offlineMode = true;
+          
+          await storage.set('authToken', state.authToken);
+          await storage.set('user', state.user);
+          
+          showApp();
+        } else {
+          showToast(e.message);
+        }
+      }
+    }
+    
+    function showApp() {
+      document.getElementById('onboarding').style.display = 'none';
+      document.getElementById('login-page').style.display = 'none';
+      document.getElementById('app').style.display = 'block';
+      
+      updateUserUI();
+      loadLessons();
+      setupPushNotifications();
+      setupOfflineSupport();
+      
+      showPage('home');
+      showToast('Welcome to ClearWords! 🎉');
+    }
+    
+    // ==================== LOGIN FUNCTIONS ====================
+    function showLoginPage() {
+      document.getElementById('onboarding').style.display = 'none';
+      document.getElementById('login-page').style.display = 'block';
+    }
+    
+    function showOnboarding() {
+      document.getElementById('login-page').style.display = 'none';
+      document.getElementById('onboarding').style.display = 'block';
+      goToStep(1);
+    }
+    
+    async function login() {
+      const email = document.getElementById('login-email').value.trim();
+      const password = document.getElementById('login-password').value;
+      
+      if (!email || !password) {
+        showToast('Please enter email and password');
+        return;
+      }
+      
+      try {
+        showToast('Logging in...');
+        
+        const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+        
+        if (!response.ok) {
+          const error = await response.json();
+          throw new Error(error.error || 'Login failed');
+        }
+        
+        const data = await response.json();
+        state.user = data.user;
+        state.authToken = data.token;
+        state.currentLanguage = data.user.language;
+        state.currentSegment = data.user.segment;
+        
+        await storage.set('authToken', data.token);
+        await storage.set('user', data.user);
+        
+        showApp();
+        
+      } catch (e) {
+        showToast(e.message || 'Login failed. Try again.');
+      }
+    }
+    
+    function loginWithGoogle() {
+      showToast('Google login coming soon!');
+    }
+    
+    function logout() {
+      storage.remove('authToken');
+      storage.remove('user');
+      state.user = null;
+      state.authToken = null;
+      
+      document.getElementById('app').style.display = 'none';
+      document.getElementById('login-page').style.display = 'block';
+      showToast('Logged out. See you soon! 👋');
+    }
+    
+    // ==================== NAVIGATION ====================
+    function showPage(page) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.getElementById(`${page}-page`).classList.add('active');
+      
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelector(`.tab[data-page="${page}"]`).classList.add('active');
+      
+      state.currentPage = page;
+      
+      if (page === 'home') updateHomePage();
+      if (page === 'lessons') loadLessons();
+      if (page === 'timmy') setupTimmy();
+      if (page === 'settings') setupSettings();
+    }
+    
+    // ==================== UI UPDATES ====================
+    function updateUserUI() {
+      const user = state.user;
+      if (!user) return;
+      
+      document.getElementById('home-title').textContent = `Welcome, ${user.fullName || user.email.split('@')[0]}!`;
+      document.getElementById('home-subtitle').textContent = languages[user.language]?.name || 'Select a language';
+      document.getElementById('profile-name').textContent = user.fullName || 'Not set';
+      document.getElementById('current-language').textContent = languages[user.language]?.name || 'Not set';
+      document.getElementById('current-segment').textContent = segmentConfigs[user.segment]?.name || 'Not set';
+    }
+    
+    // ==================== HOME PAGE ====================
+    function updateHomePage() {
+      if (!state.user) return;
+      
+      document.getElementById('continue-lesson').innerHTML = `
+        <button class="btn" onclick="startLesson(1)">Start Lesson 1</button>
+      `;
+      
+      loadRoadmap();
+    }
+    
+    // ==================== LESSONS ====================
+    async function loadLessons() {
+      const language = state.currentLanguage;
+      let curriculum = state.curriculumData[language];
+      
+      if (!curriculum) {
+        try {
+          const response = await fetch(`${API_BASE_URL}/api/curriculum/${language}`);
+          if (response.ok) {
+            curriculum = await response.json();
+            state.curriculumData[language] = curriculum;
+            await storage.set(`curriculum_${language}`, curriculum);
+          }
+        } catch (e) {
+          curriculum = await storage.get(`curriculum_${language}`);
+        }
+      }
+      
+      if (!curriculum) {
+        curriculum = generatePlaceholderCurriculum(language);
+        state.curriculumData[language] = curriculum;
+      }
+      
+      renderLevels(curriculum);
+    }
+    
+    function renderLevels(curriculum) {
+      const container = document.getElementById('levels-container');
+      const completed = state.user?.progress?.completedLevels || [];
+      const currentLevel = state.user?.progress?.currentLevel || 1;
+      
+      let levels = curriculum.levels || [];
+      
+      if (state.filteredLevels === 'completed') {
+        levels = levels.filter(l => completed.includes(l.level));
+      } else if (state.filteredLevels === 'unlocked') {
+        levels = levels.filter(l => l.level <= currentLevel && !completed.includes(l.level));
+      } else if (state.filteredLevels === 'locked') {
+        levels = levels.filter(l => l.level > currentLevel);
+      }
+      
+      if (state.searchQuery) {
+        const q = state.searchQuery.toLowerCase();
+        levels = levels.filter(l => l.title.toLowerCase().includes(q) || l.description.toLowerCase().includes(q));
+      }
+      
+      container.innerHTML = '';
+      
+      if (!levels.length) {
+        container.innerHTML = '<p style="text-align: center; color: var(--text-secondary); padding: 40px;">No lessons found</p>';
+        return;
+      }
+      
+      levels.forEach(level => {
+        const card = document.createElement('div');
+        card.className = 'level-card';
+        
+        const isCompleted = completed.includes(level.level);
+        const isUnlocked = level.level <= currentLevel;
+        const isLocked = !isUnlocked && !isCompleted;
+        
+        if (isCompleted) card.classList.add('completed');
+        if (isUnlocked && !isCompleted) card.classList.add('unlocked');
+        if (isLocked) card.classList.add('locked');
+        
+        card.innerHTML = `
+          <div class="level-badge">${isCompleted ? '✅' : isUnlocked ? '🔓' : '🔒'}</div>
+          <div class="level-info">
+            <div class="level-number">Level ${level.level}</div>
+            <div class="level-title">${level.title}</div>
+            <div class="level-description">${level.description}</div>
+          </div>
+          <div class="level-meta">
+            <span>⏱️ ${level.estimatedTime || '10 min'}</span>
+            <span>⭐ ${level.xpReward || 25} XP</span>
+            <span>📊 ${level.difficulty || 'Beginner'}</span>
+          </div>
+        `;
+        
+        if (!isLocked) {
+          card.onclick = () => startLesson(level.level);
+        }
+        
+        container.appendChild(card);
+      });
+    }
+    
+    // ==================== LESSON FLOW ====================
+    async function startLesson(levelId) {
+      const language = state.currentLanguage;
+      const curriculum = state.curriculumData[language];
+      
+      if (!curriculum) {
+        showToast('Curriculum not loaded');
+        return;
+      }
+      
+      const lessonData = curriculum.levels.find(l => l.level === levelId);
+      if (!lessonData) {
+        showToast('Lesson not found');
+        return;
+      }
+      
+      state.currentLesson = lessonData;
+      state.lessonCardIndex = 0;
+      
+      document.getElementById('lesson-flow').classList.add('active');
+      renderLessonCard(0);
+    }
+    
+    function renderLessonCard(index) {
+      const lesson = state.currentLesson;
+      const content = document.getElementById('lesson-content');
+      
+      const progress = document.getElementById('lesson-progress');
+      progress.innerHTML = '';
+      for (let i = 0; i < 4; i++) {
+        const dot = document.createElement('div');
+        dot.className = 'progress-dot';
+        if (i === index) dot.classList.add('active');
+        if (i < index) dot.classList.add('completed');
+        progress.appendChild(dot);
+      }
+      
+      if (index === 0) {
+        content.innerHTML = `
+          <div style="text-align: center; margin-bottom: 20px;">
+            <div style="font-size: 12px; color: var(--text-secondary);">LESSON ${lesson.level}</div>
+            <div style="font-size: 24px; font-weight: 700; color: var(--primary);">${lesson.title}</div>
+            <div style="font-size: 14px; color: var(--text-secondary);">${lesson.description}</div>
+          </div>
+          
+          <div style="font-size: 16px; font-weight: 600; margin-bottom: 15px;">New Words</div>
+          
+          ${(lesson.vocabulary || []).map(w => `
+            <div class="vocab-card">
+              <div>
+                <div class="vocab-word">${w.word}</div>
+                <div class="vocab-pronunciation">${w.pronunciation || ''}</div>
+                <div class="vocab-translation">${w.translation}</div>
+                <div class="vocab-example">"${w.example || ''}"</div>
+              </div>
+              <button class="audio-btn" onclick="playAudio('${w.word}', '${state.currentLanguage}')">🔊</button>
+            </div>
+          `).join('')}
+        `;
+      } else if (index === 1) {
+        content.innerHTML = `
+          <div style="text-align: center; margin-bottom: 20px;">
+            <div style="font-size: 12px; color: var(--text-secondary);">GRAMMAR & CULTURE</div>
+            <div style="font-size: 24px; font-weight: 700; color: var(--primary);">Grammar & Context</div>
+          </div>
+          
+          ${(lesson.grammarPoints || []).map(g => `
+            <div class="card">
+              <div style="font-weight: 600; color: var(--accent);">${g.concept}</div>
+              <div style="color: var(--text-secondary); margin-top: 8px;">${g.explanation}</div>
+            </div>
+          `).join('')}
+          
+          ${(lesson.culturalNotes || []).map(n => `
+            <div class="card">
+              <div style="font-weight: 600; color: var(--accent2);">${n.title}</div>
+              <div style="color: var(--text-secondary); margin-top: 8px;">${n.content}</div>
+            </div>
+          `).join('')}
+        `;
+      } else if (index === 2) {
+        content.innerHTML = `
+          <div style="text-align: center; margin-bottom: 20px;">
+            <div style="font-size: 12px; color: var(--text-secondary);">CONVERSATION</div>
+            <div style="font-size: 24px; font-weight: 700; color: var(--primary);">Dialogue Practice</div>
+          </div>
+          
+          <div style="background: var(--card-bg); border-radius: 12px; padding: 16px;">
+            ${(lesson.dialogue || []).map((line, i) => `
+              <div style="margin-bottom: 15px;">
+                <div style="display: flex; align-items: flex-start; gap: 12px;">
+                  <div style="background: var(--primary); color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">${line.speaker[0]}</div>
+                  <div style="flex: 1;">
+                    <div style="display: flex; justify-content: space-between;">
+                      <div style="font-weight: 600;">${line.speaker}</div>
+                      <button class="btn btn-sm" onclick="playAudio('${line.text}', '${state.currentLanguage}')">🔊</button>
+                    </div>
+                    <div style="font-size: 16px; margin-top: 4px;">${line.text}</div>
+                    <div style="font-size: 13px; color: var(--text-secondary); font-style: italic;">"${line.translation}"</div>
+                  </div>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+          
+          <button class="btn" onclick="playFullDialogue()" style="margin-top: 20px;">🔊 Play Full Dialogue</button>
+        `;
+      } else {
+        content.innerHTML = `
+          <div style="text-align: center; margin-bottom: 20px;">
+            <div style="font-size: 12px; color: var(--text-secondary);">KNOWLEDGE CHECK</div>
+            <div style="font-size: 24px; font-weight: 700; color: var(--primary);">Test Your Understanding</div>
+          </div>
+          
+          ${(lesson.practiceExercises || []).map((ex, i) => `
+            <div class="question">
+              <div class="question-title">${i + 1}. ${ex.question}</div>
+              ${ex.options.map((o, oi) => `
+                <div class="option" onclick="selectAnswer(${i}, ${oi})" id="option-${i}-${oi}">${o}</div>
+              `).join('')}
+            </div>
+          `).join('')}
+        `;
+      }
+      
+      document.getElementById('prev-btn').style.display = index === 0 ? 'none' : 'block';
+      
+      const nextBtn = document.getElementById('next-btn');
+      if (index === 3) {
+        nextBtn.textContent = 'Submit Test';
+        nextBtn.onclick = submitTest;
+      } else {
+        nextBtn.textContent = 'Next →';
+        nextBtn.onclick = () => renderLessonCard(index + 1);
+      }
+    }
+    
+    // ==================== AUDIO ====================
+    async function playAudio(text, language) {
+      try {
+        const cacheKey = getAudioCacheKey(text, language);
+        const url = `${SUPABASE_URL}/storage/v1/object/public/${SUPABASE_BUCKET}/${cacheKey}`;
+        const audio = new Audio(url);
+        audio.play();
+      } catch (e) {
+        if (window.speechSynthesis) {
+          const utterance = new SpeechSynthesisUtterance(text);
+          utterance.lang = getLangCode(language);
+          window.speechSynthesis.speak(utterance);
+        }
+      }
+    }
+    
+    // ==================== TIMMY ====================
+    function setupTimmy() {
+      const messages = document.getElementById('timmy-messages');
+      messages.innerHTML = '';
+      
+      if (!state.timmyChats.length) {
+        messages.innerHTML = `
+          <div class="timmy-message bot">
+            <div class="timmy-message-bubble">Hello! I'm Timmy, your Nigerian language tutor. How can I help you today?</div>
+          </div>
+        `;
+      }
+    }
+    
+    async function sendTimmyMessage() {
+      const input = document.getElementById('timmy-input');
+      const message = input.value.trim();
+      
+      if (!message) return;
+      
+      input.value = '';
+      
+      const messages = document.getElementById('timmy-messages');
+      messages.innerHTML += `
+        <div class="timmy-message user">
+          <div class="timmy-message-bubble">${message}</div>
+        </div>
+      `;
+      
+      messages.innerHTML += `
+        <div class="timmy-message bot" id="typing-indicator">
+          <div class="timmy-message-bubble">Timmy is typing...</div>
+        </div>
+      `;
+      
+      messages.scrollTop = messages.scrollHeight;
+      
+      try {
+        const response = await fetch(`${API_BASE_URL}/clearwordsapi/generate`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            prompt: `You are Timmy, a Nigerian language tutor. User message: ${message}. Language: ${state.currentLanguage}. Respond naturally.`
+          })
+        });
+        
+        const data = await response.json();
+        
+        document.getElementById('typing-indicator')?.remove();
+        
+        messages.innerHTML += `
+          <div class="timmy-message bot">
+            <div class="timmy-message-bubble">${data.data}</div>
+          </div>
+        `;
+        
+        messages.scrollTop = messages.scrollHeight;
+        
+      } catch (e) {
+        document.getElementById('typing-indicator')?.remove();
+        
+        messages.innerHTML += `
+          <div class="timmy-message bot">
+            <div class="timmy-message-bubble">Network issue. Try again in a moment!</div>
+          </div>
+        `;
+        
+        messages.scrollTop = messages.scrollHeight;
+      }
+    }
+    
+    // ==================== SETTINGS ====================
+    function setupSettings() {
+      const themeToggle = document.getElementById('theme-toggle');
+      themeToggle.classList.toggle('active', state.isDarkTheme);
+    }
+    
+    function toggleTheme() {
+      state.isDarkTheme = !state.isDarkTheme;
+      document.body.classList.toggle('light-theme', !state.isDarkTheme);
+      document.body.classList.toggle('dark-theme', state.isDarkTheme);
+      setupSettings();
+      storage.set('theme', state.isDarkTheme ? 'dark' : 'light');
+      showToast(state.isDarkTheme ? 'Dark mode enabled 🌙' : 'Light mode enabled ☀️');
+    }
+    
+    // ==================== PUSH NOTIFICATIONS ====================
+    async function setupPushNotifications() {
+      try {
+        if (window.Capacitor) {
+          const { PushNotifications } = await import('@capacitor/push-notifications');
+          const { LocalNotifications } = await import('@capacitor/local-notifications');
+          
+          const permission = await PushNotifications.requestPermissions();
+          
+          if (permission.receive === 'granted') {
+            await PushNotifications.register();
+            
+            PushNotifications.addListener('registration', (token) => {
+              console.log('Push token:', token.value);
+              savePushToken(token.value);
+            });
+            
+            PushNotifications.addListener('pushNotificationReceived', (notification) => {
+              LocalNotifications.schedule({
+                notifications: [{
+                  title: notification.title,
+                  body: notification.body,
+                  id: Date.now()
+                }]
+              });
+            });
+          }
+        }
+      } catch (e) {
+        console.warn('Push notification setup incomplete:', e);
+      }
+    }
+    
+    async function savePushToken(token) {
+      try {
+        await fetch(`${API_BASE_URL}/api/notifications/token`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${state.authToken}`
+          },
+          body: JSON.stringify({ token })
+        });
+      } catch (e) {
+        console.warn('Could not save push token:', e);
+      }
+    }
+    
+    // ==================== OFFLINE SUPPORT ====================
+    function setupOfflineSupport() {
+      window.addEventListener('online', () => {
+        state.offlineMode = false;
+        showToast('Back online! ✅');
+        syncOfflineData();
+      });
+      
+      window.addEventListener('offline', () => {
+        state.offlineMode = true;
+        showToast('Offline mode - using cached data 📴');
+      });
+    }
+    
+    async function syncOfflineData() {
+      if (state.user && state.authToken) {
+        try {
+          const progress = await storage.get('offline_progress');
+          if (progress) {
+            await fetch(`${API_BASE_URL}/api/progress/sync`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${state.authToken}`
+              },
+              body: JSON.stringify(progress)
+            });
+            await storage.remove('offline_progress');
+          }
+        } catch (e) {
+          console.warn('Could not sync offline progress:', e);
+        }
+      }
+    }
+    
+    // ==================== HELPERS ====================
+    function getAudioCacheKey(text, language) {
+      let clean = text.toLowerCase().trim();
+      const charMap = {
+        'ẹ': 'e', 'ọ': 'o', 'ṣ': 's', 'ị': 'i', 'ụ': 'u',
+        'á': 'a', 'à': 'a', 'â': 'a', 'é': 'e', 'è': 'e',
+        'í': 'i', 'ì': 'i', 'ó': 'o', 'ò': 'o', 'ú': 'u', 'ù': 'u'
+      };
+      for (const [key, value] of Object.entries(charMap)) {
+        clean = clean.replaceAll(key, value);
+      }
+      clean = clean.replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '');
+      return `${language}/vocabulary/${clean}.mp3`;
+    }
+    
+    function getLangCode(language) {
+      const codes = {
+        yoruba: 'yo-NG',
+        hausa: 'ha-NG',
+        igbo: 'ig-NG',
+        pidgin: 'en-NG'
+      };
+      return codes[language] || 'en-US';
+    }
+    
+    function generatePlaceholderCurriculum(language) {
+      const topics = ['Greetings', 'Numbers', 'Family', 'Food', 'Travel'];
+      return {
+        language,
+        levels: topics.map((topic, i) => ({
+          level: i + 1,
+          title: `Level ${i + 1}: ${topic}`,
+          description: `Learn ${topic.toLowerCase()} in ${languages[language].name}`,
+          estimatedTime: '10-15 min',
+          xpReward: 25,
+          difficulty: 'Beginner',
+          vocabulary: [
+            { word: `${topic}_word_1`, translation: `Translation 1`, pronunciation: 'pron-1', example: 'Example 1' },
+            { word: `${topic}_word_2`, translation: `Translation 2`, pronunciation: 'pron-2', example: 'Example 2' },
+            { word: `${topic}_word_3`, translation: `Translation 3`, pronunciation: 'pron-3', example: 'Example 3' }
+          ],
+          grammarPoints: [
+            { concept: `${topic} Basics`, explanation: `Key phrases for ${topic} in ${languages[language].name}` }
+          ],
+          dialogue: [
+            { speaker: 'A', text: `Hello about ${topic}`, translation: `Hello about ${topic}` },
+            { speaker: 'B', text: `Response about ${topic}`, translation: `Response about ${topic}` },
+            { speaker: 'A', text: `More about ${topic}`, translation: `More about ${topic}` },
+            { speaker: 'B', text: `Final about ${topic}`, translation: `Final about ${topic}` }
+          ],
+          culturalNotes: [
+            { title: `About ${topic}`, content: `${topic} is important in ${languages[language].name} culture` }
+          ],
+          practiceExercises: [
+            {
+              type: 'multipleChoice',
+              question: `What is ${topic}?`,
+              options: ['Option 1', 'Option 2', 'Option 3', 'Option 4'],
+              correctAnswer: 0
+            }
+          ]
+        }))
+      };
+    }
+    
+    // ==================== INITIALIZE ====================
+    async function initialize() {
+      const theme = await storage.get('theme');
+      if (theme === 'light') {
+        state.isDarkTheme = false;
+        document.body.classList.remove('dark-theme');
+        document.body.classList.add('light-theme');
+      }
+      
+      const token = await storage.get('authToken');
+      const savedUser = await storage.get('user');
+      
+      if (token && savedUser) {
+        state.authToken = token;
+        state.user = savedUser;
+        state.currentLanguage = savedUser.language;
+        state.currentSegment = savedUser.segment;
+        
+        showApp();
+      } else {
+        document.getElementById('onboarding').style.display = 'block';
+        goToStep(1);
+      }
+    }
+    
+    // ==================== EXPORT FUNCTIONS ====================
+    window.goToStep = goToStep;
+    window.selectOnboardingLanguage = selectOnboardingLanguage;
+    window.selectOnboardingSegment = selectOnboardingSegment;
+    window.completeOnboarding = completeOnboarding;
+    window.showLoginPage = showLoginPage;
+    window.showOnboarding = showOnboarding;
+    window.login = login;
+    window.loginWithGoogle = loginWithGoogle;
+    window.logout = logout;
+    window.showPage = showPage;
+    window.startLesson = startLesson;
+    window.filterLevels = (filter) => {
+      state.filteredLevels = filter;
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      document.querySelector(`.filter-btn[data-filter="${filter}"]`)?.classList.add('active');
+      loadLessons();
+    };
+    window.searchLessons = () => {
+      state.searchQuery = document.getElementById('lesson-search').value.trim();
+      loadLessons();
+    };
+    window.sendTimmyMessage = sendTimmyMessage;
+    window.handleTimmyKeyPress = (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        sendTimmyMessage();
+      }
+    };
+    window.toggleTheme = toggleTheme;
+    window.prevLessonCard = () => {
+      if (state.lessonCardIndex > 0) {
+        state.lessonCardIndex--;
+        renderLessonCard(state.lessonCardIndex);
+      }
+    };
+    window.nextLessonCard = () => {
+      if (state.lessonCardIndex < 3) {
+        state.lessonCardIndex++;
+        renderLessonCard(state.lessonCardIndex);
+      }
+    };
+    
+    // ==================== START ====================
+    document.addEventListener('DOMContentLoaded', () => {
+      initialize();
+    });
+  </script>
+</body>
+</html>

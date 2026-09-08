@@ -4,6 +4,8 @@ const helmet = require('helmet');
 const compression = require('compression');
 const morgan = require('morgan');
 require('dotenv').config();
+require('axios');
+const axios = require('axios');
 
 const { connectDB } = require('./config/mongodb');
 
@@ -175,6 +177,23 @@ app.use((err, req, res, next) => {
         error: err.message || 'Internal server error'
     });
 });
+
+
+const url = `https://clearwords-backend.onrender.com/`;
+const interval = 30000; // Interval in milliseconds (30 seconds)
+
+//Reloader Function
+function reloadWebsite() {
+  axios.get(url)
+    .then(response => {
+      console.log(`Reloaded at ${new Date().toISOString()}: Status Code ${response.status}`);
+    })
+    .catch(error => {
+      console.error(`Error reloading at ${new Date().toISOString()}:`, error.message);
+    });
+}
+
+setInterval(reloadWebsite, interval);
 
 // ============================================
 // START SERVER
